@@ -1,0 +1,113 @@
+services:
+
+  # ── Frontend Angular ──────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: wib-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - price-service
+      - notification-service
+    networks:
+      - wib-network
+    restart: unless-stopped
+
+  # ── price-service ─────────────────────────────────
+  price-service:
+    build:
+      context: ./backend/price-service
+      dockerfile: Dockerfile
+    container_name: wib-price-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/wib
+      - SPRING_DATASOURCE_USERNAME=wib
+      - SPRING_DATASOURCE_PASSWORD=wib
+      - SPRING_REDIS_HOST=redis
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    networks:
+      - wib-network
+    restart: unless-stopped
+
+  # ── notification-service ──────────────────────────
+  notification-service:
+    build:
+      context: ./backend/notification-service
+      dockerfile: Dockerfile
+    container_name: wib-notification-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+    depends_on:
+      - rabbitmq
+    networks:
+      - wib-network
+    restart: unless-stopped
+
+  # ── PostgreSQL ────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: wib-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=wib
+      - POSTGRES_USER=wib
+      - POSTGRES_PASSWORD=wib
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - wib-network
+    restart: unless-stopped
+
+  # ── Redis ─────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: wib-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - wib-network
+    restart: unless-stopped
+
+  # ── RabbitMQ ──────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: wib-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=wib
+      - RABBITMQ_DEFAULT_PASS=wib
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - wib-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  wib-network:
+    driver: bridge

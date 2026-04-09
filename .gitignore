@@ -1,0 +1,28 @@
+# ── Angular ──────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# ── Java / Maven ─────────────────────────
+backend/**/target/
+backend/**/.mvn/
+*.class
+*.jar
+*.war
+
+# ── IntelliJ ─────────────────────────────
+.idea/
+*.iml
+*.iws
+
+# ── VSCode ───────────────────────────────
+.vscode/
+
+# ── Infra / Secrets ──────────────────────
+.env
+.env.*
+docker-compose.override.yml
+
+# ── OS ───────────────────────────────────
+.DS_Store
+Thumbs.db

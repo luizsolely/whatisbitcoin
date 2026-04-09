@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════
+   WHATISBITCOIN.COM — Global Styles
+   Theme: Dark Vault × Bitcoin Orange
+   ═══════════════════════════════════════ */
+
+/* ── CSS Variables ── */
+:root {
+  --btc-orange: #f7931a;
+  --btc-orange-dim: rgba(247, 147, 26, 0.12);
+  --btc-orange-glow: rgba(247, 147, 26, 0.35);
+  --bg-void: #080808;
+  --bg-deep: #0e0e0e;
+  --bg-surface: #141414;
+  --bg-card: #1a1a1a;
+  --bg-card-hover: #202020;
+  --text-primary: #f0ece3;
+  --text-secondary: #8a8070;
+  --text-muted: #4a4540;
+  --border: rgba(247, 147, 26, 0.08);
+  --border-strong: rgba(247, 147, 26, 0.2);
+  --font-display: 'Chakra Petch', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-body: 'Exo 2', sans-serif;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Typography ── */
+em { font-style: italic; color: var(--btc-orange); font-family: var(--font-display); }
+strong { font-weight: 600; color: var(--text-primary); }
+a { color: var(--btc-orange); text-decoration: none; transition: opacity var(--transition); }
+a:hover { opacity: 0.75; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb { background: var(--btc-orange); border-radius: 2px; }
+
+/* ── Layout ── */
+.container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
