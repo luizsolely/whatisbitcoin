@@ -56,6 +56,7 @@ services:
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_FROM=${MAIL_FROM}
     depends_on:
       rabbitmq:
         condition: service_healthy
