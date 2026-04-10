@@ -1,0 +1,153 @@
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="nav-logo" routerLink="/">
+      <span class="logo-symbol">₿</span>
+      <span class="logo-text">whatisbitcoin</span>
+    </a>
+    <ul class="nav-links">
+      <li><a routerLink="/">← Back</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO TICKER ═══════════ -->
+<section class="ticker-hero">
+  <div class="ticker-badge">
+    <span class="badge-dot" [class.live]="wsConnected"></span>
+    {{ wsConnected ? 'LIVE' : 'CONNECTING...' }}
+  </div>
+
+  <div class="ticker-price" [class.up]="priceDirection === 'up'" [class.down]="priceDirection === 'down'">
+    ${{ formatPrice(currentPrice?.price) }}
+  </div>
+
+  <div class="ticker-change" [class.positive]="(currentPrice?.change_24h ?? 0) >= 0"
+                              [class.negative]="(currentPrice?.change_24h ?? 0) < 0">
+    {{ (currentPrice?.change_24h ?? 0) >= 0 ? '▲' : '▼' }}
+    {{ currentPrice?.change_24h?.toFixed(2) ?? '—' }}% (24h)
+  </div>
+
+  <div class="ticker-updated" *ngIf="lastUpdated">
+    Last updated: {{ lastUpdated | date:'HH:mm:ss' }}
+  </div>
+</section>
+
+<!-- ═══════════ STATS CARDS ═══════════ -->
+<div class="stats-strip">
+  <div class="market-card">
+    <span class="card-label">Market Cap</span>
+    <span class="card-value">{{ formatLarge(currentPrice?.market_cap) }}</span>
+  </div>
+  <div class="market-card">
+    <span class="card-label">Volume 24h</span>
+    <span class="card-value">{{ formatLarge(currentPrice?.volume_24h) }}</span>
+  </div>
+  <div class="market-card">
+    <span class="card-label">BTC Price</span>
+    <span class="card-value">${{ formatPrice(currentPrice?.price) }}</span>
+  </div>
+  <div class="market-card">
+    <span class="card-label">Change 24h</span>
+    <span class="card-value"
+          [class.positive]="(currentPrice?.change_24h ?? 0) >= 0"
+          [class.negative]="(currentPrice?.change_24h ?? 0) < 0">
+      {{ currentPrice?.change_24h?.toFixed(2) ?? '—' }}%
+    </span>
+  </div>
+</div>
+
+<!-- ═══════════ CHART ═══════════ -->
+<section class="chart-section">
+  <div class="container">
+    <div class="chart-header">
+      <h2>Price History</h2>
+      <div class="period-selector">
+        <button
+          *ngFor="let p of periods"
+          [class.active]="selectedPeriod === p.days"
+          (click)="loadHistory(p.days)">
+          {{ p.label }}
+        </button>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas #priceChart></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ALERT FORM ═══════════ -->
+<section class="alert-section">
+  <div class="container">
+    <div class="alert-grid">
+
+      <div class="alert-copy">
+        <div class="section-label">Price Alerts</div>
+        <h2 class="section-title">Get notified when<br><em>Bitcoin moves.</em></h2>
+        <p>Set a price target and we'll send you an email the moment Bitcoin crosses it. No account needed.</p>
+      </div>
+
+      <div class="alert-form-wrap">
+        <div class="success-msg" *ngIf="alertSuccess">
+          ✓ Alert registered! You'll receive an email when your target is reached.
+        </div>
+
+        <div class="error-msg" *ngIf="alertError">
+          {{ alertError }}
+        </div>
+
+        <div class="form-group" *ngIf="!alertSuccess">
+          <label>Email</label>
+          <input
+            type="email"
+            [(ngModel)]="alertEmail"
+            placeholder="your@email.com"
+          />
+        </div>
+
+        <div class="form-row" *ngIf="!alertSuccess">
+          <div class="form-group">
+            <label>Target Price (USD)</label>
+            <input
+              type="number"
+              [(ngModel)]="alertPrice"
+              placeholder="e.g. 100000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Condition</label>
+            <select [(ngModel)]="alertDirection">
+              <option value="ABOVE">Price goes above</option>
+              <option value="BELOW">Price falls below</option>
+            </select>
+          </div>
+        </div>
+
+        <button
+          class="btn-primary"
+          (click)="submitAlert()"
+          [disabled]="alertSubmitting || !alertEmail || !alertPrice"
+          *ngIf="!alertSuccess">
+          {{ alertSubmitting ? 'Registering...' : 'Set Alert' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo-symbol">₿</span>
+      <span class="logo-text">whatisbitcoin.com</span>
+    </div>
+    <div class="footer-line">
+      <span>Prices via CoinGecko API</span>
+      <span>© {{ currentYear }} whatisbitcoin.com</span>
+    </div>
+  </div>
+</footer>
