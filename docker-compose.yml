@@ -28,12 +28,15 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/wib
       - SPRING_DATASOURCE_USERNAME=wib
       - SPRING_DATASOURCE_PASSWORD=wib
-      - SPRING_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
-      - postgres
-      - redis
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
     networks:
       - wib-network
     restart: unless-stopped
@@ -54,7 +57,8 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     networks:
       - wib-network
     restart: unless-stopped
@@ -74,6 +78,11 @@ services:
     networks:
       - wib-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wib -d wib"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # ── Redis ─────────────────────────────────────────
   redis:
@@ -102,6 +111,11 @@ services:
     networks:
       - wib-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

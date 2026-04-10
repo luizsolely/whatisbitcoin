@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: notification-service
+
+  # ── RabbitMQ ────────────────────────────────────
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: wib
+    password: wib
+
+  # ── Mail ────────────────────────────────────────
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:your@gmail.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# ── Server ────────────────────────────────────────
+server:
+  port: 8081
+
+# ── Actuator ──────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+---
+# ── Docker profile ────────────────────────────────
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  rabbitmq:
+    host: rabbitmq
