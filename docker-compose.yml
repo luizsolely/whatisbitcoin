@@ -7,7 +7,8 @@ services:
       dockerfile: Dockerfile
     container_name: wib-frontend
     ports:
-      - "4200:80"
+      - "80:80"
+    mem_limit: 64m
     depends_on:
       - price-service
       - notification-service
@@ -21,6 +22,7 @@ services:
       context: ./backend/price-service
       dockerfile: Dockerfile
     container_name: wib-price-service
+    mem_limit: 256m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/wib
@@ -28,6 +30,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=wib
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_RABBITMQ_HOST=rabbitmq
+      - JAVA_OPTS=-Xms64m -Xmx192m
     depends_on:
       postgres:
         condition: service_healthy
@@ -45,6 +48,7 @@ services:
       context: ./backend/notification-service
       dockerfile: Dockerfile
     container_name: wib-notification-service
+    mem_limit: 192m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_RABBITMQ_HOST=rabbitmq
@@ -53,6 +57,7 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - MAIL_FROM=${MAIL_FROM}
+      - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -64,12 +69,13 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: wib-postgres
-    ports:
-      - "5432:5432"
+    mem_limit: 192m
     environment:
       - POSTGRES_DB=wib
       - POSTGRES_USER=wib
       - POSTGRES_PASSWORD=wib
+      - POSTGRES_SHARED_BUFFERS=32MB
+      - POSTGRES_EFFECTIVE_CACHE_SIZE=96MB
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -85,8 +91,8 @@ services:
   redis:
     image: redis:7-alpine
     container_name: wib-redis
-    ports:
-      - "6379:6379"
+    mem_limit: 64m
+    command: redis-server --maxmemory 48mb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
     networks:
@@ -97,8 +103,8 @@ services:
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
     container_name: wib-rabbitmq
+    mem_limit: 192m
     ports:
-      - "5672:5672"
       - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=wib
