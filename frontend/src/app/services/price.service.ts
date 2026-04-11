@@ -28,8 +28,8 @@ export interface AlertRequest {
 @Injectable({ providedIn: 'root' })
 export class PriceService implements OnDestroy {
 
-  private readonly API_URL  = 'http://localhost:8080/api/price';
-  private readonly WS_URL   = 'ws://localhost:8081/ws/price';
+  private readonly API_URL  = '/api/price';
+  private readonly WS_URL   = `ws://${window.location.host}/ws/price`;
 
   private ws!: WebSocket;
   private priceSubject = new BehaviorSubject<BitcoinPrice | null>(null);
