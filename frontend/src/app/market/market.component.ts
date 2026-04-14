@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { Chart, registerables } from 'chart.js';
 import { PriceService, BitcoinPrice, PriceSnapshot } from '../services/price.service';
 
@@ -27,7 +26,14 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
   private priceSub!: Subscription;
 
   // ── Live data ────────────────────────────────────
-  currentPrice: BitcoinPrice | null = null;
+  currentPrice: BitcoinPrice = {
+    price: 0,
+    market_cap: 0,
+    volume_24h: 0,
+    change_24h: 0,
+    timestamp: new Date().toISOString()
+  };
+  loading = true;
   wsConnected = false;
   lastUpdated: Date | null = null;
   priceDirection: 'up' | 'down' | null = null;
@@ -55,7 +61,7 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     // Load initial price via HTTP
     this.priceService.getCurrentPrice().subscribe({
-      next: (p) => { this.currentPrice = p; this.previousPrice = p.price; },
+      next: (p) => { this.currentPrice = p; this.previousPrice = p.price; this.loading = false; },
       error: () => console.warn('Could not fetch initial price')
     });
 
@@ -63,9 +69,8 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
     this.priceService.connectWebSocket();
     this.wsConnected = true;
 
-    this.priceSub = this.priceService.price$.pipe(
-      filter((price): price is BitcoinPrice => price !== null)
-    ).subscribe(price => {
+    this.priceSub = this.priceService.price$.subscribe(price => {
+      if (!price) return;
       if (this.previousPrice !== null) {
         this.priceDirection = price.price > this.previousPrice ? 'up' : 'down';
         setTimeout(() => this.priceDirection = null, 1500);
@@ -73,6 +78,7 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
       this.previousPrice = price.price;
       this.currentPrice = price;
       this.lastUpdated = new Date();
+      this.loading = false;
     });
   }
 
@@ -163,7 +169,7 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.alertEmail || !this.alertPrice) return;
     this.alertSubmitting = true;
     this.alertError = '';
-    this.currentYear = new Date().getFullYear();
+  currentYear = new Date().getFullYear();
     this.alertSuccess = false;
 
     this.priceService.registerAlert({

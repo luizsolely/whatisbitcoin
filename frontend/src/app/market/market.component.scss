@@ -242,3 +242,14 @@
 }
 .footer-brand { display: flex; align-items: center; gap: 10px; .logo-symbol { font-size: 1.4rem; color: var(--btc-orange); font-family: var(--font-display); } .logo-text { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-secondary); } }
 .footer-line { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); display: flex; gap: 24px; }
+
+/* ── Loading state ── */
+.ticker-loading {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  animation: pulse 1.5s ease-in-out infinite;
+  margin-bottom: 20px;
+}

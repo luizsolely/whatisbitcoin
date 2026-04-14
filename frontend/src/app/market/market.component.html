@@ -13,7 +13,9 @@
 
 <!-- ═══════════ HERO TICKER ═══════════ -->
 <section class="ticker-hero">
-  <div class="ticker-badge">
+  <div class="ticker-loading" *ngIf="loading">Connecting to live feed...</div>
+
+  <div class="ticker-badge" *ngIf="!loading">
     <span class="badge-dot" [class.live]="wsConnected"></span>
     {{ wsConnected ? 'LIVE' : 'CONNECTING...' }}
   </div>
@@ -25,7 +27,7 @@
   <div class="ticker-change" [class.positive]="(currentPrice?.change_24h ?? 0) >= 0"
                               [class.negative]="(currentPrice?.change_24h ?? 0) < 0">
     {{ (currentPrice?.change_24h ?? 0) >= 0 ? '▲' : '▼' }}
-    {{ currentPrice?.change_24h != null ? currentPrice!.change_24h.toFixed(2) : '—' }}% (24h)
+    {{ loading ? '—' : currentPrice.change_24h.toFixed(2) }}% (24h)
   </div>
 
   <div class="ticker-updated" *ngIf="lastUpdated">
