@@ -67,7 +67,6 @@ spring:
 
   rabbitmq:
     host: rabbitmq
-<<<<<<< HEAD
 
 ---
 spring:

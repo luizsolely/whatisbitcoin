@@ -1,0 +1,59 @@
+services:
+
+  # ── Frontend — Static Site (CDN, gratuito, sem dormir) ──
+  - type: web
+    name: wib-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist/whatisbitcoin/browser
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://wib-price-service.onrender.com/api/:splat
+      - type: rewrite
+        source: /ws/*
+        destination: https://wib-notification-service.onrender.com/ws/:splat
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # ── price-service ───────────────────────────────────────
+  - type: web
+    name: wib-price-service
+    runtime: docker
+    rootDir: backend/price-service
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: RABBITMQ_URL
+        sync: false
+
+  # ── notification-service ────────────────────────────────
+  - type: web
+    name: wib-notification-service
+    runtime: docker
+    rootDir: backend/notification-service
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+      - key: RABBITMQ_URL
+        sync: false
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_PORT
+        sync: false
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        sync: false
