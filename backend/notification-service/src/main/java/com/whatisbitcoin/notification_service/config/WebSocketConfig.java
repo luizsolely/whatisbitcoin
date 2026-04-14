@@ -18,6 +18,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
                 .addHandler(priceWebSocketHandler, "/ws/price")
-                .setAllowedOrigins("*");
+                .setAllowedOrigins("http://localhost:4200", "https://wib-frontend-ta9i.onrender.com");
     }
 }

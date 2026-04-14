@@ -28,8 +28,8 @@ export interface AlertRequest {
 @Injectable({ providedIn: 'root' })
 export class PriceService implements OnDestroy {
 
-  private readonly API_URL  = '/api/price';
-  private readonly WS_URL   = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws/price`;
+  private readonly API_URL  = 'https://wib-price-service.onrender.com/api/price';
+  private readonly WS_URL   = 'wss://wib-notification-service.onrender.com/ws/price';
 
   private ws!: WebSocket;
   private priceSubject = new BehaviorSubject<BitcoinPrice | null>(null);

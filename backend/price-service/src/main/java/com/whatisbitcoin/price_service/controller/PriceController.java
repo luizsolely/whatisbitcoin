@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/price")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:4200", "https://wib-frontend-ta9i.onrender.com"})
 @RequiredArgsConstructor
 public class PriceController {
 
