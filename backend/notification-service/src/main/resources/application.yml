@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: notification-service
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: wib
+    password: wib
+
+  mail:
+    host: ${MAIL_HOST:smtp.sendgrid.net}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:apikey}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+mail:
+  from: ${MAIL_FROM:noreply@whatisbitcoin.com}
+
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  rabbitmq:
+    host: rabbitmq
+
+---
+spring:
+  config:
+    activate:
+      on-profile: render
+
+  rabbitmq:
+    addresses: ${RABBITMQ_URL}
+    ssl:
+      enabled: true
+
+server:
+  port: ${PORT:8081}
