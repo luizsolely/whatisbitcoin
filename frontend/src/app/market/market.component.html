@@ -25,7 +25,7 @@
   <div class="ticker-change" [class.positive]="(currentPrice?.change_24h ?? 0) >= 0"
                               [class.negative]="(currentPrice?.change_24h ?? 0) < 0">
     {{ (currentPrice?.change_24h ?? 0) >= 0 ? '▲' : '▼' }}
-    {{ currentPrice?.change_24h?.toFixed(2) ?? '—' }}% (24h)
+    {{ currentPrice?.change_24h != null ? currentPrice!.change_24h.toFixed(2) : '—' }}% (24h)
   </div>
 
   <div class="ticker-updated" *ngIf="lastUpdated">
