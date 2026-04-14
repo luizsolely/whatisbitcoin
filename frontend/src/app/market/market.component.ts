@@ -61,8 +61,16 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     // Load initial price via HTTP
     this.priceService.getCurrentPrice().subscribe({
-      next: (p) => { this.currentPrice = p; this.previousPrice = p.price; this.loading = false; },
-      error: () => console.warn('Could not fetch initial price')
+      next: (p) => {
+        if (p) {
+          this.currentPrice = p;
+          this.previousPrice = p.price;
+          this.loading = false;
+        }
+      },
+      error: () => {
+        console.warn('No cached price yet — waiting for WebSocket');
+      }
     });
 
     // Connect WebSocket
@@ -169,7 +177,7 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.alertEmail || !this.alertPrice) return;
     this.alertSubmitting = true;
     this.alertError = '';
-    this.currentYear = new Date().getFullYear();
+  currentYear = new Date().getFullYear();
     this.alertSuccess = false;
 
     this.priceService.registerAlert({

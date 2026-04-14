@@ -17,6 +17,9 @@ public class CoinGeckoService {
     private final WebClient webClient;
     private final String currency;
 
+    @Value("${coingecko.api-key:}")
+    private String apiKey;
+
     public CoinGeckoService(
             @Value("${coingecko.base-url}") String baseUrl,
             @Value("${coingecko.currency}") String currency) {
@@ -29,14 +32,19 @@ public class CoinGeckoService {
         log.info("Fetching Bitcoin price from CoinGecko...");
 
         Map<String, Object> response = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/simple/price")
-                        .queryParam("ids", "bitcoin")
-                        .queryParam("vs_currencies", currency)
-                        .queryParam("include_market_cap", "true")
-                        .queryParam("include_24hr_vol", "true")
-                        .queryParam("include_24hr_change", "true")
-                        .build())
+                .uri(uriBuilder -> {
+                    var builder = uriBuilder
+                            .path("/simple/price")
+                            .queryParam("ids", "bitcoin")
+                            .queryParam("vs_currencies", currency)
+                            .queryParam("include_market_cap", "true")
+                            .queryParam("include_24hr_vol", "true")
+                            .queryParam("include_24hr_change", "true");
+                    if (apiKey != null && !apiKey.isBlank()) {
+                        builder = builder.queryParam("x_cg_demo_api_key", apiKey);
+                    }
+                    return builder.build();
+                })
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();

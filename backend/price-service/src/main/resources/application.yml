@@ -47,10 +47,11 @@ management:
 coingecko:
   base-url: https://api.coingecko.com/api/v3
   currency: usd
+  api-key: ${COINGECKO_API_KEY:}
 
 price:
   scheduler:
-    interval-ms: 30000
+    interval-ms: 240000
 
 ---
 spring:
