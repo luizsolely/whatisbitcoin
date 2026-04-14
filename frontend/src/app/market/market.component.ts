@@ -169,7 +169,7 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.alertEmail || !this.alertPrice) return;
     this.alertSubmitting = true;
     this.alertError = '';
-  currentYear = new Date().getFullYear();
+    this.currentYear = new Date().getFullYear();
     this.alertSuccess = false;
 
     this.priceService.registerAlert({
