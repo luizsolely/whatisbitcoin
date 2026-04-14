@@ -319,3 +319,20 @@ cite { font-family: var(--font-mono); font-size: 0.7rem; color: var(--btc-orange
 .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; .logo-symbol { font-size: 1.6rem; color: var(--btc-orange); font-family: var(--font-display); } .logo-text { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); } }
 .footer-note { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; max-width: 520px; }
 .footer-line { display: flex; gap: 32px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); border-top: 1px solid var(--border); width: 100%; padding-top: 20px; margin-top: 4px; justify-content: center; em { color: var(--btc-orange); font-style: normal; } }
+
+/* ── Market nav link ── */
+.nav-market-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--btc-orange) !important;
+  border: 1px solid var(--border-strong);
+  padding: 5px 12px;
+  border-radius: 2px;
+  transition: all var(--transition);
+
+  &:hover {
+    background: var(--btc-orange-dim);
+    opacity: 1 !important;
+  }
+}

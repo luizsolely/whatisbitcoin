@@ -13,6 +13,9 @@
           (click)="scrollTo(link.anchor)"
         >{{ link.label }}</a>
       </li>
+      <li>
+        <a routerLink="/market" class="nav-market-link">Live Market →</a>
+      </li>
     </ul>
 
     <button class="burger" (click)="menuOpen = !menuOpen" [class.open]="menuOpen">

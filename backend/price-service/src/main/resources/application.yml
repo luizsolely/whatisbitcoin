@@ -67,6 +67,7 @@ spring:
 
   rabbitmq:
     host: rabbitmq
+<<<<<<< HEAD
 
 ---
 spring:
@@ -94,3 +95,5 @@ spring:
 
 server:
   port: ${PORT:8080}
+=======
+>>>>>>> 42378f673a0579d6373760cf53baa0eed7f7ffc3
