@@ -22,7 +22,7 @@ Built as a portfolio project to demonstrate modern fullstack development with An
 - **Nginx** — Static file serving
 
 ### Backend
-- **Spring Boot 3** — REST API and scheduled tasks
+- **Spring Boot 4** — REST API and scheduled tasks
 - **Spring AMQP** — RabbitMQ message publishing and consumption
 - **Spring WebSocket** — Live price broadcast to connected clients
 - **Spring Data JPA** — PostgreSQL persistence with Flyway migrations
