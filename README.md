@@ -8,7 +8,7 @@ Built as a portfolio project to demonstrate modern fullstack development with An
 
 ## Live Demo
 
-> Frontend: https://wib-frontend.onrender.com  
+> Frontend: https://wib-frontend-ta9i.onrender.com  
 > Market: https://wib-frontend.onrender.com/market
 
 ---
