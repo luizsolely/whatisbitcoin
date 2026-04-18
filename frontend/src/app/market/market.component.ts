@@ -8,13 +8,15 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Chart, registerables } from 'chart.js';
 import { PriceService, BitcoinPrice, PriceSnapshot } from '../services/price.service';
+import { TranslationService } from '../services/translation.service';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-market',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
   templateUrl: './market.component.html',
   styleUrls: ['./market.component.scss']
 })
@@ -56,7 +58,7 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
   alertError = '';
   currentYear = new Date().getFullYear();
 
-  constructor(private priceService: PriceService) {}
+  constructor(private priceService: PriceService, public ts: TranslationService) {}
 
   ngOnInit(): void {
     // Load initial price via HTTP
@@ -192,7 +194,7 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertPrice = null;
       },
       error: () => {
-        this.alertError = 'Failed to register alert. Please try again.';
+        this.alertError = this.ts.t('market.alerts.error');
         this.alertSubmitting = false;
       }
     });

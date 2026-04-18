@@ -4,6 +4,9 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { TranslationService, Lang } from '../services/translation.service';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 interface Particle {
   x: number; y: number; radius: number; angle: number;
@@ -15,10 +18,14 @@ interface TimelineEvent {
   year: string; title: string; description: string; highlight?: boolean;
 }
 
+interface Pillar {
+  icon: string; title: string; description: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -28,47 +35,25 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private ctx!: CanvasRenderingContext2D;
   private animationId!: number;
   private particles: Particle[] = [];
-  private pulseAngle = 0;
   private glowIntensity = 0;
   private glowDir = 1;
+  private langSub!: Subscription;
 
-  activeSection: string = 'hero';
+  activeSection = 'hero';
   menuOpen = false;
   currentYear = new Date().getFullYear();
 
-  navLinks = [
-    { label: 'Origin', anchor: 'origin' },
-    { label: 'Timeline', anchor: 'timeline' },
-    { label: 'Technology', anchor: 'technology' },
-    { label: 'Impact', anchor: 'impact' },
-  ];
+  navLinks: { label: string; anchor: string }[] = [];
+  stats: { value: string; label: string }[] = [];
+  timeline: TimelineEvent[] = [];
+  pillars: Pillar[] = [];
 
-  stats = [
-    { value: '21M', label: 'Total Supply Cap' },
-    { value: '2009', label: 'Year of Genesis' },
-    { value: '$0→$70K+', label: 'Price Journey' },
-    { value: '1B+', label: 'Wallets Created' },
-  ];
+  constructor(public ts: TranslationService) {}
 
-  timeline: TimelineEvent[] = [
-    { year: '2008', title: 'The Whitepaper', description: 'On October 31st, an entity known as Satoshi Nakamoto published "Bitcoin: A Peer-to-Peer Electronic Cash System." Nine pages that would change finance forever. The world was in the midst of a banking crisis — the timing was not a coincidence.', highlight: true },
-    { year: '2009', title: 'Genesis Block', description: 'On January 3rd, the first Bitcoin block was mined. Embedded in it: a headline from The Times — "Chancellor on brink of second bailout for banks." A declaration of intent, carved into the blockchain for eternity.' },
-    { year: '2010', title: 'First Real Transaction', description: 'Programmer Laszlo Hanyecz paid 10,000 BTC for two pizzas — the first known commercial transaction. Those coins would later be worth over $700 million. Every May 22nd is now celebrated as Bitcoin Pizza Day.', highlight: true },
-    { year: '2011', title: 'Parity with the Dollar', description: 'Bitcoin reached $1 USD for the first time, achieving parity with the world\'s reserve currency. Silk Road launched, exposing Bitcoin to controversy. Mt. Gox becomes the dominant exchange.' },
-    { year: '2013', title: 'First Bubble', description: 'Bitcoin surged past $1,000 for the first time, capturing mainstream headlines. The Cyprus banking crisis drove demand as citizens sought alternatives to a collapsing financial system.' },
-    { year: '2017', title: 'The Great Bull Run', description: 'Bitcoin reached nearly $20,000, igniting a global frenzy. ICOs flooded the market. Futures trading launched on the CME. Institutional eyes turned toward crypto for the first time.', highlight: true },
-    { year: '2021', title: 'Institutional Adoption', description: 'MicroStrategy, Tesla, and Square added Bitcoin to their balance sheets. El Salvador made it legal tender — the first nation to do so. Bitcoin peaked above $68,000. A new era had begun.' },
-    { year: '2024', title: 'The ETF Era', description: 'The SEC approved Bitcoin spot ETFs in January, opening the floodgates for retail and institutional capital. BlackRock, Fidelity and other giants entered the arena. Bitcoin broke all-time highs once again.', highlight: true },
-  ];
-
-  pillars = [
-    { icon: '🔒', title: 'Decentralization', description: 'No central authority controls Bitcoin. It runs on thousands of nodes distributed worldwide — censorship-resistant by design.' },
-    { icon: '⛓️', title: 'Blockchain', description: 'Every transaction is recorded on an immutable public ledger. Transparent, permanent, and verifiable by anyone on Earth.' },
-    { icon: '⛏️', title: 'Proof of Work', description: 'Miners compete to solve cryptographic puzzles, securing the network and earning newly minted Bitcoin as a reward.' },
-    { icon: '✂️', title: 'The Halving', description: 'Every ~4 years, the mining reward is cut in half. This controlled scarcity mimics gold — and drives Bitcoin\'s long-term price cycles.' },
-  ];
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadContent();
+    this.langSub = this.ts.lang$.subscribe(() => this.loadContent());
+  }
 
   ngAfterViewInit(): void {
     this.initCanvas();
@@ -78,6 +63,41 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     cancelAnimationFrame(this.animationId);
+    this.langSub?.unsubscribe();
+  }
+
+  private loadContent(): void {
+    this.navLinks = [
+      { label: this.ts.t('nav.origin'),     anchor: 'origin' },
+      { label: this.ts.t('nav.timeline'),   anchor: 'timeline' },
+      { label: this.ts.t('nav.technology'), anchor: 'technology' },
+      { label: this.ts.t('nav.impact'),     anchor: 'impact' },
+    ];
+
+    this.stats = [
+      { value: '21M',      label: this.ts.t('stats.supply') },
+      { value: '2009',     label: this.ts.t('stats.genesis') },
+      { value: '$0→$70K+', label: this.ts.t('stats.price') },
+      { value: '1B+',      label: this.ts.t('stats.wallets') },
+    ];
+
+    this.timeline = [
+      { year: '2008', title: this.ts.t('tl.2008.title'), description: this.ts.t('tl.2008.desc'), highlight: true },
+      { year: '2009', title: this.ts.t('tl.2009.title'), description: this.ts.t('tl.2009.desc') },
+      { year: '2010', title: this.ts.t('tl.2010.title'), description: this.ts.t('tl.2010.desc'), highlight: true },
+      { year: '2011', title: this.ts.t('tl.2011.title'), description: this.ts.t('tl.2011.desc') },
+      { year: '2013', title: this.ts.t('tl.2013.title'), description: this.ts.t('tl.2013.desc') },
+      { year: '2017', title: this.ts.t('tl.2017.title'), description: this.ts.t('tl.2017.desc'), highlight: true },
+      { year: '2021', title: this.ts.t('tl.2021.title'), description: this.ts.t('tl.2021.desc') },
+      { year: '2024', title: this.ts.t('tl.2024.title'), description: this.ts.t('tl.2024.desc'), highlight: true },
+    ];
+
+    this.pillars = [
+      { icon: '🔒', title: this.ts.t('pillar.decentralization.title'), description: this.ts.t('pillar.decentralization.desc') },
+      { icon: '⛓️', title: this.ts.t('pillar.blockchain.title'),       description: this.ts.t('pillar.blockchain.desc') },
+      { icon: '⛏️', title: this.ts.t('pillar.pow.title'),              description: this.ts.t('pillar.pow.desc') },
+      { icon: '✂️', title: this.ts.t('pillar.halving.title'),          description: this.ts.t('pillar.halving.desc') },
+    ];
   }
 
   @HostListener('window:resize')
@@ -118,7 +138,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.glowIntensity += 0.008 * this.glowDir;
     if (this.glowIntensity >= 1 || this.glowIntensity <= 0) this.glowDir *= -1;
-    this.pulseAngle += 0.01;
 
     for (let ring = 1; ring <= 3; ring++) {
       this.ctx.beginPath();

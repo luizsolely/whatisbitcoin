@@ -253,3 +253,33 @@
   animation: pulse 1.5s ease-in-out infinite;
   margin-bottom: 20px;
 }
+
+/* ── Language Switch ── */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: border-color var(--transition);
+
+  &:hover { border-color: var(--border-strong); }
+
+  span {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    transition: color var(--transition);
+
+    &.active { color: var(--btc-orange); }
+  }
+}
+
+.lang-divider {
+  color: var(--text-muted) !important;
+  font-size: 0.6rem !important;
+}

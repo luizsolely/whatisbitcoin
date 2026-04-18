@@ -6,51 +6,59 @@
       <span class="logo-text">whatisbitcoin</span>
     </a>
     <ul class="nav-links">
-      <li><a routerLink="/">← Back</a></li>
+      <li><a routerLink="/">{{ 'nav.back' | translate }}</a></li>
+      <li>
+        <button class="lang-switch" (click)="ts.toggle()">
+          <span [class.active]="ts.currentLang === 'pt'">PT</span>
+          <span class="lang-divider">/</span>
+          <span [class.active]="ts.currentLang === 'en'">EN</span>
+        </button>
+      </li>
     </ul>
   </div>
 </nav>
 
 <!-- ═══════════ HERO TICKER ═══════════ -->
 <section class="ticker-hero">
-  <div class="ticker-loading" *ngIf="loading">Connecting to live feed...</div>
+  <div class="ticker-loading" *ngIf="loading">{{ 'market.connecting' | translate }}</div>
 
   <div class="ticker-badge" *ngIf="!loading">
     <span class="badge-dot" [class.live]="wsConnected"></span>
-    {{ wsConnected ? 'LIVE' : 'CONNECTING...' }}
+    {{ wsConnected ? ('market.live' | translate) : ('market.connecting_badge' | translate) }}
   </div>
 
   <div class="ticker-price" [class.up]="priceDirection === 'up'" [class.down]="priceDirection === 'down'">
     ${{ formatPrice(currentPrice?.price) }}
   </div>
 
-  <div class="ticker-change" [class.positive]="(currentPrice?.change_24h ?? 0) >= 0"
-                              [class.negative]="(currentPrice?.change_24h ?? 0) < 0">
+  <div class="ticker-change"
+       [class.positive]="(currentPrice?.change_24h ?? 0) >= 0"
+       [class.negative]="(currentPrice?.change_24h ?? 0) < 0">
     {{ (currentPrice?.change_24h ?? 0) >= 0 ? '▲' : '▼' }}
     {{ loading ? '—' : currentPrice.change_24h.toFixed(2) }}% (24h)
   </div>
 
   <div class="ticker-updated" *ngIf="lastUpdated">
-    Last updated: {{ lastUpdated | date:'HH:mm:ss' }}
+    {{ 'market.updated' | translate }} {{ lastUpdated | date:'HH:mm:ss' }}
   </div>
 </section>
 
 <!-- ═══════════ STATS CARDS ═══════════ -->
 <div class="stats-strip">
   <div class="market-card">
-    <span class="card-label">Market Cap</span>
+    <span class="card-label">{{ 'market.marketcap' | translate }}</span>
     <span class="card-value">{{ formatLarge(currentPrice?.market_cap) }}</span>
   </div>
   <div class="market-card">
-    <span class="card-label">Volume 24h</span>
+    <span class="card-label">{{ 'market.volume' | translate }}</span>
     <span class="card-value">{{ formatLarge(currentPrice?.volume_24h) }}</span>
   </div>
   <div class="market-card">
-    <span class="card-label">BTC Price</span>
+    <span class="card-label">{{ 'market.btcprice' | translate }}</span>
     <span class="card-value">${{ formatPrice(currentPrice?.price) }}</span>
   </div>
   <div class="market-card">
-    <span class="card-label">Change 24h</span>
+    <span class="card-label">{{ 'market.change' | translate }}</span>
     <span class="card-value"
           [class.positive]="(currentPrice?.change_24h ?? 0) >= 0"
           [class.negative]="(currentPrice?.change_24h ?? 0) < 0">
@@ -63,7 +71,7 @@
 <section class="chart-section">
   <div class="container">
     <div class="chart-header">
-      <h2>Price History</h2>
+      <h2>{{ 'market.history' | translate }}</h2>
       <div class="period-selector">
         <button
           *ngFor="let p of periods"
@@ -85,14 +93,17 @@
     <div class="alert-grid">
 
       <div class="alert-copy">
-        <div class="section-label">Price Alerts</div>
-        <h2 class="section-title">Get notified when<br><em>Bitcoin moves.</em></h2>
-        <p>Set a price target and we'll send you an email the moment Bitcoin crosses it. No account needed.</p>
+        <div class="section-label">{{ 'market.alerts.label' | translate }}</div>
+        <h2 class="section-title">
+          {{ 'market.alerts.title1' | translate }}<br>
+          <em>{{ 'market.alerts.title2' | translate }}</em>
+        </h2>
+        <p>{{ 'market.alerts.desc' | translate }}</p>
       </div>
 
       <div class="alert-form-wrap">
         <div class="success-msg" *ngIf="alertSuccess">
-          ✓ Alert registered! You'll receive an email when your target is reached.
+          {{ 'market.alerts.success' | translate }}
         </div>
 
         <div class="error-msg" *ngIf="alertError">
@@ -100,29 +111,21 @@
         </div>
 
         <div class="form-group" *ngIf="!alertSuccess">
-          <label>Email</label>
-          <input
-            type="email"
-            [(ngModel)]="alertEmail"
-            placeholder="your@email.com"
-          />
+          <label>{{ 'market.alerts.email' | translate }}</label>
+          <input type="email" [(ngModel)]="alertEmail" placeholder="your@email.com"/>
         </div>
 
         <div class="form-row" *ngIf="!alertSuccess">
           <div class="form-group">
-            <label>Target Price (USD)</label>
-            <input
-              type="number"
-              [(ngModel)]="alertPrice"
-              placeholder="e.g. 100000"
-            />
+            <label>{{ 'market.alerts.price' | translate }}</label>
+            <input type="number" [(ngModel)]="alertPrice" placeholder="e.g. 100000"/>
           </div>
 
           <div class="form-group">
-            <label>Condition</label>
+            <label>{{ 'market.alerts.condition' | translate }}</label>
             <select [(ngModel)]="alertDirection">
-              <option value="ABOVE">Price goes above</option>
-              <option value="BELOW">Price falls below</option>
+              <option value="ABOVE">{{ 'market.alerts.above' | translate }}</option>
+              <option value="BELOW">{{ 'market.alerts.below' | translate }}</option>
             </select>
           </div>
         </div>
@@ -132,7 +135,7 @@
           (click)="submitAlert()"
           [disabled]="alertSubmitting || !alertEmail || !alertPrice"
           *ngIf="!alertSuccess">
-          {{ alertSubmitting ? 'Registering...' : 'Set Alert' }}
+          {{ alertSubmitting ? ('market.alerts.registering' | translate) : ('market.alerts.btn' | translate) }}
         </button>
       </div>
 
@@ -148,7 +151,7 @@
       <span class="logo-text">whatisbitcoin.com</span>
     </div>
     <div class="footer-line">
-      <span>Prices via CoinGecko API</span>
+      <span>{{ 'footer.prices' | translate }}</span>
       <span>© {{ currentYear }} whatisbitcoin.com</span>
     </div>
   </div>

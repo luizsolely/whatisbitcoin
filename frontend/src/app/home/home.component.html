@@ -8,19 +8,32 @@
 
     <ul class="nav-links" [class.open]="menuOpen">
       <li *ngFor="let link of navLinks">
-        <a
-          [class.active]="activeSection === link.anchor"
-          (click)="scrollTo(link.anchor)"
-        >{{ link.label }}</a>
+        <a [class.active]="activeSection === link.anchor" (click)="scrollTo(link.anchor)">
+          {{ link.label }}
+        </a>
       </li>
       <li>
-        <a routerLink="/market" class="nav-market-link">Live Market →</a>
+        <a routerLink="/market" class="nav-market-link">{{ 'nav.market' | translate }}</a>
+      </li>
+      <li>
+        <button class="lang-switch" (click)="ts.toggle()">
+          <span [class.active]="ts.currentLang === 'pt'">PT</span>
+          <span class="lang-divider">/</span>
+          <span [class.active]="ts.currentLang === 'en'">EN</span>
+        </button>
       </li>
     </ul>
 
-    <button class="burger" (click)="menuOpen = !menuOpen" [class.open]="menuOpen">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="navbar-right">
+      <button class="lang-switch mobile-only" (click)="ts.toggle()">
+        <span [class.active]="ts.currentLang === 'pt'">PT</span>
+        <span class="lang-divider">/</span>
+        <span [class.active]="ts.currentLang === 'en'">EN</span>
+      </button>
+      <button class="burger" (click)="menuOpen = !menuOpen" [class.open]="menuOpen">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -29,20 +42,17 @@
   <canvas #particleCanvas class="particle-canvas"></canvas>
 
   <div class="hero-content">
-    <div class="hero-badge">Est. 2009 · Block #0</div>
+    <div class="hero-badge">{{ 'hero.badge' | translate }}</div>
     <div class="bitcoin-logo-wrap">
       <div class="bitcoin-logo">₿</div>
     </div>
     <h1 class="hero-title">
-      What Is<br><em>Bitcoin?</em>
+      {{ 'hero.title1' | translate }}<br><em>{{ 'hero.title2' | translate }}</em>
     </h1>
-    <p class="hero-sub">
-      The story of a currency born from crisis, built on mathematics,<br>
-      and designed to outlast every institution that ever tried to stop it.
-    </p>
+    <p class="hero-sub">{{ 'hero.sub' | translate }}</p>
     <div class="hero-cta">
       <button class="btn-primary" (click)="scrollTo('origin')">
-        Explore the Story
+        {{ 'hero.cta' | translate }}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 5v14M5 12l7 7 7-7"/>
         </svg>
@@ -51,7 +61,7 @@
   </div>
 
   <div class="hero-scroll-hint">
-    <span>Scroll</span>
+    <span>{{ 'hero.scroll' | translate }}</span>
     <div class="scroll-line"></div>
   </div>
 </section>
@@ -69,40 +79,30 @@
 <!-- ═══════════ ORIGIN ═══════════ -->
 <section id="origin" class="section origin-section">
   <div class="container">
-    <div class="section-label">Chapter 01 — Genesis</div>
-    <h2 class="section-title">Why Was Bitcoin<br><em>Created?</em></h2>
+    <div class="section-label">{{ 'origin.label' | translate }}</div>
+    <h2 class="section-title">{{ 'origin.title1' | translate }}<br><em>{{ 'origin.title2' | translate }}</em></h2>
 
     <div class="origin-grid">
       <div class="origin-text">
-        <p class="lead-text">
-          It was October 2008. The global financial system was collapsing. Banks that had been deemed "too big to fail" were failing. Governments were printing money to bail out the very institutions that caused the crisis.
-        </p>
-        <p>
-          Into this moment of systemic failure stepped an anonymous figure — or possibly a group — using the pseudonym <strong>Satoshi Nakamoto</strong>. On a cryptography mailing list, Satoshi shared a nine-page document describing a radical new idea.
-        </p>
-        <p>
-          A form of money that required no bank, no government, no trusted third party. A currency governed entirely by mathematics and cryptographic proof. A system where transactions were final, transparent, and censorship-resistant.
-        </p>
-        <p>
-          The motivations were embedded in the code itself. In Bitcoin's very first block — the Genesis Block — Satoshi included a message: <em>"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks."</em> Not just a timestamp. A manifesto.
-        </p>
+        <p class="lead-text">{{ 'origin.p1' | translate }}</p>
+        <p [innerHTML]="'origin.p2' | translate"></p>
+        <p>{{ 'origin.p3' | translate }}</p>
+        <p [innerHTML]="'origin.p4' | translate"></p>
       </div>
 
       <div class="origin-callout">
         <div class="callout-card">
           <div class="callout-icon">📜</div>
-          <h3>The Whitepaper</h3>
-          <p>Published anonymously on October 31, 2008 — Halloween — Satoshi's paper proposed "a purely peer-to-peer version of electronic cash" that would allow online payments without going through a financial institution.</p>
+          <h3>{{ 'origin.whitepaper.title' | translate }}</h3>
+          <p>{{ 'origin.whitepaper.text' | translate }}</p>
           <a class="callout-link" href="https://bitcoin.org/bitcoin.pdf" target="_blank">
-            Read the Original Paper →
+            {{ 'origin.whitepaper.link' | translate }}
           </a>
         </div>
 
         <div class="callout-card quote-card">
           <div class="quote-mark">"</div>
-          <blockquote>
-            The root problem with conventional currency is all the trust that's required to make it work.
-          </blockquote>
+          <blockquote>{{ 'origin.quote' | translate }}</blockquote>
           <cite>— Satoshi Nakamoto, 2009</cite>
         </div>
       </div>
@@ -113,9 +113,9 @@
 <!-- ═══════════ TIMELINE ═══════════ -->
 <section id="timeline" class="section timeline-section">
   <div class="container">
-    <div class="section-label">Chapter 02 — The Journey</div>
-    <h2 class="section-title">15 Years of<br><em>History</em></h2>
-    <p class="section-desc">From nine pages on a mailing list to a trillion-dollar asset class — every defining moment.</p>
+    <div class="section-label">{{ 'timeline.label' | translate }}</div>
+    <h2 class="section-title">{{ 'timeline.title1' | translate }}<br><em>{{ 'timeline.title2' | translate }}</em></h2>
+    <p class="section-desc">{{ 'timeline.desc' | translate }}</p>
 
     <div class="timeline">
       <div class="timeline-line"></div>
@@ -141,9 +141,9 @@
 <!-- ═══════════ TECHNOLOGY ═══════════ -->
 <section id="technology" class="section tech-section">
   <div class="container">
-    <div class="section-label">Chapter 03 — The Machine</div>
-    <h2 class="section-title">How Does It<br><em>Work?</em></h2>
-    <p class="section-desc">Four pillars that make Bitcoin unlike anything the world had seen before.</p>
+    <div class="section-label">{{ 'tech.label' | translate }}</div>
+    <h2 class="section-title">{{ 'tech.title1' | translate }}<br><em>{{ 'tech.title2' | translate }}</em></h2>
+    <p class="section-desc">{{ 'tech.desc' | translate }}</p>
 
     <div class="pillars-grid">
       <div class="pillar-card" *ngFor="let p of pillars">
@@ -155,16 +155,16 @@
 
     <div class="halving-banner">
       <div class="halving-text">
-        <h3>The 21 Million Rule</h3>
-        <p>There will never be more than 21,000,000 Bitcoin in existence. This hard cap — baked into the protocol's code — is what makes Bitcoin the hardest money ever created. No inflation. No exceptions. No central bank can change it.</p>
+        <h3>{{ 'tech.rule.title' | translate }}</h3>
+        <p>{{ 'tech.rule.text' | translate }}</p>
       </div>
       <div class="halving-visual">
         <div class="supply-bar">
           <div class="supply-fill" style="width: 93.7%"></div>
         </div>
         <div class="supply-labels">
-          <span>Mined: ~19.7M</span>
-          <span>Remaining: ~1.3M</span>
+          <span>{{ 'tech.supply.mined' | translate }}</span>
+          <span>{{ 'tech.supply.remaining' | translate }}</span>
         </div>
       </div>
     </div>
@@ -174,25 +174,25 @@
 <!-- ═══════════ IMPACT ═══════════ -->
 <section id="impact" class="section impact-section">
   <div class="container">
-    <div class="section-label">Chapter 04 — The Legacy</div>
-    <h2 class="section-title">A Revolution<br><em>Still Unfolding</em></h2>
+    <div class="section-label">{{ 'impact.label' | translate }}</div>
+    <h2 class="section-title">{{ 'impact.title1' | translate }}<br><em>{{ 'impact.title2' | translate }}</em></h2>
 
     <div class="impact-grid">
       <div class="impact-card">
-        <h3>Financial Inclusion</h3>
-        <p>Over 1.4 billion adults worldwide remain unbanked. Bitcoin requires only a smartphone and internet access — no ID, no credit history, no branch visit. For the first time, anyone can participate in the global economy on equal terms.</p>
+        <h3>{{ 'impact.inclusion.title' | translate }}</h3>
+        <p>{{ 'impact.inclusion.desc' | translate }}</p>
       </div>
       <div class="impact-card">
-        <h3>Monetary Sovereignty</h3>
-        <p>Citizens in countries with hyperinflation — Venezuela, Argentina, Lebanon, Zimbabwe — turned to Bitcoin as their savings were destroyed. It became not just an investment, but a lifeline.</p>
+        <h3>{{ 'impact.sovereignty.title' | translate }}</h3>
+        <p>{{ 'impact.sovereignty.desc' | translate }}</p>
       </div>
       <div class="impact-card">
-        <h3>Institutional Capital</h3>
-        <p>From hedge funds to sovereign wealth funds, the world's largest financial institutions now hold or offer Bitcoin exposure. The narrative shifted from "internet money" to "digital gold" to "reserve asset."</p>
+        <h3>{{ 'impact.institutional.title' | translate }}</h3>
+        <p>{{ 'impact.institutional.desc' | translate }}</p>
       </div>
       <div class="impact-card">
-        <h3>Technological Legacy</h3>
-        <p>Bitcoin's blockchain technology ignited an entire ecosystem — smart contracts, DeFi, NFTs, and more. Whether you love or hate them, none would exist without Satoshi's original insight.</p>
+        <h3>{{ 'impact.tech.title' | translate }}</h3>
+        <p>{{ 'impact.tech.desc' | translate }}</p>
       </div>
     </div>
   </div>
@@ -203,11 +203,11 @@
   <div class="cta-band-inner">
     <div class="cta-btc-symbol">₿</div>
     <div class="cta-copy">
-      <h2>The story is still being written.</h2>
-      <p>Every block mined adds a new chapter. The revolution is ongoing.</p>
+      <h2>{{ 'cta.title' | translate }}</h2>
+      <p>{{ 'cta.sub' | translate }}</p>
     </div>
     <button class="btn-primary" (click)="scrollTo('timeline')">
-      Read the Full Timeline
+      {{ 'cta.btn' | translate }}
     </button>
   </div>
 </div>
@@ -219,12 +219,9 @@
       <span class="logo-symbol">₿</span>
       <span class="logo-text">whatisbitcoin.com</span>
     </div>
-    <p class="footer-note">
-      An educational archive dedicated to the history, technology, and impact of Bitcoin.<br>
-      Not financial advice. Not investment advice. Just the truth about a revolution.
-    </p>
+    <p class="footer-note">{{ 'footer.note' | translate }}</p>
     <div class="footer-line">
-      <span>Block height: <em>#∞</em></span>
+      <span>{{ 'footer.block' | translate }} <em>#∞</em></span>
       <span>© {{ currentYear }} whatisbitcoin.com</span>
     </div>
   </div>
