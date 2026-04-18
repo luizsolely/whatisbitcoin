@@ -70,7 +70,7 @@ export class PriceService implements OnDestroy {
     return this.http.get<BitcoinPrice>(`${this.API_URL}/current`);
   }
 
-  getHistory(days: number = 7): Observable<PriceSnapshot[]> {
+  getHistory(days: number = 1): Observable<PriceSnapshot[]> {
     return this.http.get<PriceSnapshot[]>(`${this.API_URL}/history?days=${days}`);
   }
 

@@ -40,11 +40,11 @@ export class MarketComponent implements OnInit, AfterViewInit, OnDestroy {
   private previousPrice: number | null = null;
 
   // ── History ──────────────────────────────────────
-  selectedPeriod: number = 7;
+  selectedPeriod: number = 1;
   periods = [
+    { label: '1H', days: 0.04167 },
+    { label: '24H', days: 1 },
     { label: '7D', days: 7 },
-    { label: '30D', days: 30 },
-    { label: '1Y', days: 365 },
   ];
 
   // ── Alert form ───────────────────────────────────

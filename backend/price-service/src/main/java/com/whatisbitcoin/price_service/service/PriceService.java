@@ -71,8 +71,9 @@ public class PriceService {
         return null;
     }
 
-    public List<PriceSnapshot> getHistory(int days) {
-        Instant from = Instant.now().minus(days, ChronoUnit.DAYS);
+    public List<PriceSnapshot> getHistory(double days) {
+        long minutes = (long) (days * 24 * 60);
+        Instant from = Instant.now().minus(minutes, ChronoUnit.MINUTES);
         return snapshotRepository.findHistory(from);
     }
 }

@@ -33,7 +33,7 @@ public class PriceController {
     // GET /api/price/history?days=7
     @GetMapping("/history")
     public ResponseEntity<List<PriceSnapshot>> getHistory(
-            @RequestParam(defaultValue = "7") int days) {
+            @RequestParam(defaultValue = "1") double days) {
         return ResponseEntity.ok(priceService.getHistory(days));
     }
 
